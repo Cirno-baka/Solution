@@ -64,11 +64,11 @@ void dfs(int num, int rest, int length, int pre)
                     --cnt[j];
                     dfs(num, rest-j, length, j);
                     ++cnt[j];
-                    if(rest==length||rest==j)
-                    {
-                        return;
-                    }
                 }
+            }
+            if(rest==length||rest==j)
+            {
+                return;
             }
         }
     }
