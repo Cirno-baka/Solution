@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-int n, s[69], tot, sum, cnt[59];
+int n, tot, sum, cnt[59], maxn, minn=99;
 bool use[69];
 
 inline int read()
@@ -32,9 +32,10 @@ void scan()
             continue;
         }
         ++tot;
-        s[tot]=cutLength;
         sum+=cutLength;
         ++cnt[cutLength];
+        minn=(minn>cutLength) ? cutLength : minn;
+        maxn=(maxn<cutLength) ? cutLength : maxn;
     }
     return;
 }
@@ -51,14 +52,14 @@ void dfs(int num, int rest, int length, int pre)
         printf("%d", length);
         exit(0);
     }
-    for(register int j=min(rest, pre); j>=1; --j)
+    for(register int j=pre; j>=minn; --j)
     {
         if(cnt[j]>0)
         {
             if(j==rest)
             {
                 --cnt[j];
-                dfs(num+1, length, length, 0x7fffffff);
+                dfs(num+1, length, length, maxn);
                 ++cnt[j];
             }
             else
@@ -68,7 +69,7 @@ void dfs(int num, int rest, int length, int pre)
                     --cnt[j];
                     dfs(num, rest-j, length, j);
                     ++cnt[j];
-                    if(rest==0||rest==j)
+                    if(rest==length||rest==j)
                     {
                         return;
                     }
@@ -81,13 +82,13 @@ void dfs(int num, int rest, int length, int pre)
 int main()
 {
     scan();
-    for(register int i=s[1]; i<=sum/2; ++i)
+    for(register int i=maxn; i<=(sum>>1); ++i)
     {
         if(sum%i!=0)
         {
             continue;
         }
-        dfs(1, i, i, 0x7fffffff);
+        dfs(1, i, i, maxn);
     }
     printf("%d", sum);
     return 0;
