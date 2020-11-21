@@ -40,11 +40,6 @@ void scan()
     return;
 }
 
-inline int min(const int &Cirno, const int &Daiyousei)
-{
-    return (Cirno<Daiyousei) ? Cirno : Daiyousei;
-}
-
 void dfs(int num, int rest, int length, int pre)
 {
     if(num==sum/length+1)
@@ -52,31 +47,24 @@ void dfs(int num, int rest, int length, int pre)
         printf("%d", length);
         exit(0);
     }
+    if(rest==0)
+    {
+        dfs(num+1, length, length, maxn);
+    }
     for(register int j=pre; j>=minn; --j)
     {
-        if(cnt[j]>0)
+        if(cnt[j]>0&&j<=rest)
         {
-            if(j==rest)
+            --cnt[j];
+            dfs(num, rest-j, length, j);
+            ++cnt[j];
+            if(rest==length||j==rest)
             {
-                --cnt[j];
-                dfs(num+1, length, length, maxn);
-                ++cnt[j];
-            }
-            else
-            {
-                if(j<rest)
-                {
-                    --cnt[j];
-                    dfs(num, rest-j, length, j);
-                    ++cnt[j];
-                    if(rest==length||rest==j)
-                    {
-                        return;
-                    }
-                }
+                return;
             }
         }
     }
+    return;
 }
 
 int main()
