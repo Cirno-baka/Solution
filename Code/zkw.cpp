@@ -2,7 +2,7 @@
 #include <cstdio>
 typedef long long ll;
 
-ll n, m, bit, tree[600009];
+ll n, m, bit, tree[2000009];
 
 inline ll read()
 {
