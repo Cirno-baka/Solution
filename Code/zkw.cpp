@@ -48,9 +48,9 @@ inline void build()
     }
     for(register int i=bit-1; i>=1; --i)
     {
-        tree[i]=tree[(i<<2)]+tree[(i<<2|1)];
-        ls[i]=ls[(i<<2)];
-        rs[i]=rs[(i<<2|1)];
+        tree[i]=tree[(i<<1)]+tree[(i<<1|1)];
+        ls[i]=ls[(i<<1)];
+        rs[i]=rs[(i<<1|1)];
     }
     return;
 }
@@ -76,9 +76,9 @@ inline void tagUpdate(ll nod)
         s.push(nod);
         nod>>=1;
     }
-    while(s.size>0)
+    while(s.size()>0)
     {
-        pushDown(s.top);
+        pushDown(s.top());
         s.pop();
     }
     return;
@@ -86,21 +86,66 @@ inline void tagUpdate(ll nod)
 
 inline void rangeUpdate(ll pl, ll pr, ll as)
 {
-    int 
+    bool updatedl=0, updatedr=0;
+    ll temp, firstl=-1, firstr=-1;
+    for(pl=pl+bit-1, pr=pr+bit+1; (pl^pr^1); (pl>>=1), (pr>>=1))
+    {
+        if(~pl&1)
+        {
+            temp=pl^1;
+            if(!updatedl)
+            {
+                firstl=temp;
+                tagUpdate(temp);
+                updatedl=1;
+            }
+            tag[temp]+=as;
+            tree[temp]+=(rs[temp]-ls[temp]+1)*as;
+        }
+        if(pr&1)
+        {
+            temp=pr^1;
+            if(!updatedr)
+            {
+                firstr=temp;
+                tagUpdate(temp);
+                updatedr=1;
+            }
+            tag[temp]+=as;
+            tree[temp]+=(rs[temp]-ls[temp]+1)*as;
+        }
+    }
+    for(firstl>>=1; firstl>0; firstl>>=1)
+    {
+        maintain(firstl);
+    }
+    for(firstr>>=1; firstr>0; firstr>>=1)
+    {
+        maintain(firstr);
+    }
     return;
 }
 
 inline void rangeSumQuery(ll l, ll r)
 {
+    bool visitl=0, visitr=0;
     ll ans=0;
     for(l=l+bit-1, r=r+bit+1; (l^r^1); (l>>=1), (r>>=1))
     {
         if(~l&1)
         {
+            if(!visitl)
+            {
+                tagUpdate(l^1);
+            }
             ans+=tree[l^1];
         }
         if(r&1)
         {
+            if(!visitr)
+            {
+                tagUpdate(r^1);
+            }
             ans+=tree[r^1];
         }
     }
