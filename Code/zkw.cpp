@@ -46,7 +46,7 @@ inline void build()
         ls[i]=i-bit;
         rs[i]=i-bit;
     }
-    for(register int i=bit-1; i>=1; --i)
+    for(register int i=bit-1; i>0; --i)
     {
         tree[i]=tree[(i<<1)]+tree[(i<<1|1)];
         ls[i]=ls[(i<<1)];
@@ -57,7 +57,7 @@ inline void build()
 
 inline void pushDown(ll xx)
 {
-    if(tag[xx]>0&&xx>bit)
+    if(tag[xx]>0&&xx<bit)
     {
         tag[(xx<<1)]+=tag[xx];
         tag[(xx<<1|1)]+=tag[xx];
